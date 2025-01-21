@@ -12,8 +12,9 @@ type Data = {
 
 const dataKey = 'code-journal-data';
 
-function readData(): Data {
+async function readData(): Promise<Data> {
   let data: Data;
+  /*
   const localData = localStorage.getItem(dataKey);
   if (localData) {
     data = JSON.parse(localData) as Data;
@@ -22,6 +23,23 @@ function readData(): Data {
       entries: [],
       nextEntryId: 1,
     };
+  }
+  */
+
+  try {
+    console.log('hu');
+    const res = await fetch('/api/entries');
+    console.log('res', res);
+    if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+
+    const entries = (await res.json()) as Entry[];
+    console.log('entries', entries);
+    data = {
+      entries: entries ?? [],
+      nextEntryId: entries ? entries.length : 1,
+    };
+  } catch (e) {
+    throw new Error(e instanceof Error ? e.message : 'Unknown Error');
   }
   return data;
 }

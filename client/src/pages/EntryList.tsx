@@ -5,13 +5,14 @@ import { Entry, readEntries } from '../data';
 
 export function EntryList() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<unknown>();
 
   useEffect(() => {
     async function load() {
       try {
         const entries = await readEntries();
+        console.log('got entires', entries);
         setEntries(entries);
       } catch (err) {
         setError(err);
