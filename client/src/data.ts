@@ -13,33 +13,26 @@ type Data = {
 const dataKey = 'code-journal-data';
 
 async function readData(): Promise<Data> {
-  let data: Data;
-  /*
-  const localData = localStorage.getItem(dataKey);
-  if (localData) {
-    data = JSON.parse(localData) as Data;
-  } else {
-    data = {
-      entries: [],
-      nextEntryId: 1,
-    };
-  }
-  */
+  let data: Data | null = null;
 
   try {
-    console.log('hu');
     const res = await fetch('/api/entries');
-    console.log('res', res);
     if (!res.ok) throw new Error(`fetch Error ${res.status}`);
 
     const entries = (await res.json()) as Entry[];
-    console.log('entries', entries);
     data = {
       entries: entries ?? [],
       nextEntryId: entries ? entries.length : 1,
     };
   } catch (e) {
     throw new Error(e instanceof Error ? e.message : 'Unknown Error');
+  } finally {
+    if (!data) {
+      data = {
+        entries: [],
+        nextEntryId: 1,
+      };
+    }
   }
   return data;
 }
@@ -50,11 +43,11 @@ function writeData(data: Data): void {
 }
 
 export async function readEntries(): Promise<Entry[]> {
-  return readData().entries;
+  return (await readData()).entries;
 }
 
 export async function readEntry(entryId: number): Promise<Entry | undefined> {
-  return readData().entries.find((e) => e.entryId === entryId);
+  return (await readData()).entries.find((e) => e.entryId === entryId);
 }
 
 export async function addEntry(entry: Entry): Promise<Entry> {

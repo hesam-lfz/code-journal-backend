@@ -12,7 +12,6 @@ export function EntryList() {
     async function load() {
       try {
         const entries = await readEntries();
-        console.log('got entires', entries);
         setEntries(entries);
       } catch (err) {
         setError(err);

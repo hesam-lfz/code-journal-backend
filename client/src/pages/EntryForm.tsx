@@ -29,6 +29,7 @@ export function EntryForm() {
       setIsLoading(true);
       try {
         const entry = await readEntry(id);
+        console.log(entry);
         if (!entry) throw new Error(`Entry with ID ${id} not found`);
         setEntry(entry);
         setPhotoUrl(entry.photoUrl);
@@ -39,7 +40,7 @@ export function EntryForm() {
       }
     }
     if (isEditing) load(+entryId);
-  }, [entryId]);
+  }, [entryId, isEditing]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
