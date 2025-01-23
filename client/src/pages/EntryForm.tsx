@@ -29,7 +29,6 @@ export function EntryForm() {
       setIsLoading(true);
       try {
         const entry = await readEntry(id);
-        console.log(entry);
         if (!entry) throw new Error(`Entry with ID ${id} not found`);
         setEntry(entry);
         setPhotoUrl(entry.photoUrl);
